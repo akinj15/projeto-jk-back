@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  userName  String    @unique
+  token     String?
+  password  String?
+  firstName String?
+  surName   String?
+  lastName  String?
+  role      Role      @relation(fields: [roleId], references: [id])
+  roleId    String
+  orders    Order[]
+  clients   Client[]
+  images    Image[]
+  contacts  Contact[]
+}
+
+model Products {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  forecast  DateTime @updatedAt
+  stock     Int?
+  published Boolean  @default(false)
+  active    Boolean  @default(false)
+  price     Float
+  orders    Order[]
+  clients   Client[]
+  images    Image[]
+}
+
+model Order {
+  id        String         @id @default(uuid())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  published Boolean        @default(false)
+  author    User           @relation(fields: [authorId], references: [id])
+  authorId  String
+  products  Products[]
+  client    Client[]
+  status    Status_order[]
+}
+
+model Client {
+  id          String     @id @default(uuid())
+  name        String
+  fone        String
+  observation String?
+  interest    Products[]
+  contacts    Contact[]
+  orders      Order[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  realtorId   String
+  realtor     User       @relation(fields: [realtorId], references: [id])
+}
+
+model Image {
+  id       String     @id @default(uuid())
+  label    String
+  font     String
+  interest Products[]
+  users    User[]
+}
+
+model Status_order {
+  id    String  @id @default(uuid())
+  name  String
+  color String
+  order Order[]
+}
+
+model Status_contact {
+  id      String    @id @default(uuid())
+  name    String
+  color   String
+  contact Contact[]
+}
+
+model Role {
+  id       String @id @default(uuid())
+  name     String
+  color    String
+  keywords String
+  user     User[]
+}
+
+model Contact {
+  id             String          @id @default(uuid())
+  finished       Boolean
+  finishedAt     DateTime?
+  rescheduled    Boolean?
+  rescheduledAt  DateTime?
+  scheduled      DateTime
+  response       String?
+  lastResponse   String?
+  observation    String?
+  User           User?           @relation(fields: [userId], references: [id])
+  userId         String?
+  Client         Client?         @relation(fields: [clientId], references: [id])
+  clientId       String?
+  Status_contact Status_contact? @relation(fields: [statusId], references: [id])
+  statusId       String?
+}
