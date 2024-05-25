@@ -2,8 +2,8 @@ import { Contact, Client, Order} from "./"
 
 export type User = {
 	id?: string,
-	userName: String,
-	email: String,
+	userName: string,
+	email: string,
 	token?: string,
 	password: string,
 	firstName: string,

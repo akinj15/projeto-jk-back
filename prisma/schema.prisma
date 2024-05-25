@@ -17,7 +17,7 @@ model User {
   id        String    @id @default(uuid())
   email     String    @unique
   userName  String    @unique
-  token     String?
+  token     String?   @unique
   password  String?
   firstName String?
   surName   String?
@@ -95,7 +95,7 @@ model Status_contact {
 
 model Role {
   id       String @id @default(uuid())
-  name     String
+  name     String @unique
   color    String
   keywords String
   user     User[]
