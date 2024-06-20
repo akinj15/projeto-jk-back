@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import * as bcryptjs from "bcryptjs"
 import config from "../../config"
 import { prisma } from "../database";
-import { User } from "../models"
+import { User, UserUpdateInput } from "../models"
 
 class UserService {
   async create(user: User) {
@@ -62,6 +62,40 @@ class UserService {
     }
 
     return userDB;
+  }
+  
+  async findAll() {
+    let userDB = await prisma.user.findMany();
+    return userDB.map((e)=> {
+      return {
+        id: e.id,
+        email: e.email,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        userName: e.userName,
+        roleId: e.roleId,
+        surName: e.surName,
+      }
+    });
+  }
+
+  async updateUser(user: UserUpdateInput) {
+    let userDB = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        email: user.email,
+        userName: user.userName,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        surName: user.surName,
+      }
+    });
+    return { ... userDB, 
+      password: undefined,
+      token: undefined,
+    };
   }
   
 }

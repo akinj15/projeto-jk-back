@@ -14,24 +14,24 @@ services:
       POSTGRES_DB: db
 
 
-  # api:
-  #   container_name: api
-  #   image: 'node:18'
-  #   networks:
-  #     - base_network
-  #   ports:
-  #     - '3000:3000'
-  #   command: sh -c "yarn install && yarn dev"
-  #   depends_on:
-  #     - db
-  #   working_dir: /app
-  #   volumes:
-  #     - ./:/app
-  #   env_file:
-  #     - .env
+  api:
+    container_name: api
+    image: 'node:18'
+    networks:
+      - base_network
+    ports:
+      - '3001:3001'
+    command: sh -c "yarn install && yarn dev"
+    depends_on:
+      - db
+    working_dir: /app
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
 
-# networks:
-#   base_network:
+networks:
+  base_network:
 
 volumes:
   codei_db_data:

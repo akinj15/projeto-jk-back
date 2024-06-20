@@ -54,11 +54,44 @@ class UserController {
       }
       let user = await userService.findByToken(token);
 
-      return response.status(200).send(user)
+      return response.status(200).send({user})
     } catch (e) {
       return response.status(401).send({ error: e })
     }
   }
+
+
+  async listUsers(request: Request, response: Response) {
+    try {
+      let user = await userService.findAll();
+      return response.status(200).send({user})
+    } catch (e) {
+      return response.status(401).send({ error: e })
+    }
+  }
+
+  async updateUser(request: Request, response: Response) {
+    try {
+      const { email, password, firstName, lastName, surName, id } = request.body;
+      if (!email || !password || !firstName || !lastName || !surName || !id) {
+        throw new Error("autorization is required.");
+      }
+      
+      let user = await userService.updateUser({
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        surName: surName,
+        id: id,
+      });
+
+      return response.status(200).send({user})
+    } catch (e) {
+      return response.status(401).send({ error: e })
+    }
+  }
+
 }
 
 export const userController = new UserController()
